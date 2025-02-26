@@ -83,6 +83,7 @@ const Navigation: React.FC = () => {
   );
 
   const handleSignOut = () => {
+    // @ts-ignore
     dispatch(signOut());
     navigate("/signin");
   };
