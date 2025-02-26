@@ -31,8 +31,43 @@ import { signOut } from "./store/authSlice";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#1976d2",
-      light: "#42a5f5",
+      main: "#90CAF9",
+      light: "#E3F2FD",
+    },
+    secondary: {
+      main: "#F48FB1",
+      light: "#FFCC80",
+    },
+    background: {
+      default: "#E3F2FD",
+      paper: "#FFFFFF",
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#90CAF9",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          backgroundColor: "#F48FB1",
+          "&:hover": {
+            backgroundColor: "#F06292",
+          },
+        },
+        outlined: {
+          borderColor: "#90CAF9",
+          color: "#90CAF9",
+          "&:hover": {
+            borderColor: "#64B5F6",
+            backgroundColor: "rgba(144, 202, 249, 0.04)",
+          },
+        },
+      },
     },
   },
 });
@@ -97,6 +132,7 @@ function App() {
               height: "100vh",
               display: "flex",
               flexDirection: "column",
+              bgcolor: "background.default",
             }}
           >
             <Navigation />

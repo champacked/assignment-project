@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { Button, Typography, Box } from '@mui/material';
-import { Plus, Minus, RotateCcw } from 'lucide-react';
+import React, { useState, useCallback } from "react";
+import { Button, Typography, Box } from "@mui/material";
+import { Plus, Minus, RotateCcw } from "lucide-react";
 
 const Counter: React.FC = () => {
   const [count, setCount] = useState(0);
-  
+
   const getBackgroundHeight = useCallback(() => {
     return `${Math.min(100, Math.max(0, count * 2))}%`;
   }, [count]);
@@ -12,38 +12,43 @@ const Counter: React.FC = () => {
   return (
     <Box
       sx={{
-        position: 'relative',
-        height: '100%',
-        width: '100%',
-        overflow: 'hidden',
+        position: "relative",
+        height: "100%",
+        width: "100%",
+        overflow: "hidden",
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        boxShadow: 3,
       }}
     >
       <Box
         sx={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
-          width: '100%',
-          bgcolor: 'primary.light',
+          width: "100%",
+          bgcolor: "secondary.light",
           height: getBackgroundHeight(),
-          transition: 'height 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          transition: "height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       />
       <Box
         sx={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           gap: 2,
           p: 4,
         }}
       >
-        <Typography variant="h2">{count}</Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Typography variant="h2" sx={{ color: "primary.main" }}>
+          {count}
+        </Typography>
+        <Box sx={{ display: "flex", gap: 2 }}>
           <Button
             variant="contained"
-            onClick={() => setCount(prev => prev + 1)}
+            onClick={() => setCount((prev) => prev + 1)}
             startIcon={<Plus />}
           >
             Increment
@@ -57,7 +62,7 @@ const Counter: React.FC = () => {
           </Button>
           <Button
             variant="contained"
-            onClick={() => setCount(prev => prev - 1)}
+            onClick={() => setCount((prev) => prev - 1)}
             startIcon={<Minus />}
           >
             Decrement
