@@ -17,6 +17,8 @@ import {
   Container,
   Box,
   Typography,
+  IconButton,
+  Avatar,
 } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import Counter from "./components/Counter";
@@ -24,6 +26,7 @@ import UserForm from "./components/UserForm";
 import RichTextEditor from "./components/RichTextEditor";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
+import Profile from "./components/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import { store, RootState } from "./store";
 import { signOut } from "./store/authSlice";
@@ -101,7 +104,24 @@ const Navigation: React.FC = () => {
             <Button color="inherit" component={Link} to="/editor">
               Rich Text Editor
             </Button>
-            <Button color="inherit" onClick={handleSignOut}>
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/profile"
+              sx={{ ml: 1 }}
+            >
+              <Avatar
+                sx={{
+                  width: 32,
+                  height: 32,
+                  bgcolor: "secondary.main",
+                  fontSize: "1rem",
+                }}
+              >
+                {user?.name?.charAt(0)}
+              </Avatar>
+            </IconButton>
+            <Button color="inherit" onClick={handleSignOut} sx={{ ml: 1 }}>
               Sign Out
             </Button>
           </>
@@ -161,6 +181,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <RichTextEditor />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <PrivateRoute>
+                      <Profile />
                     </PrivateRoute>
                   }
                 />
