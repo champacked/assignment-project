@@ -9,12 +9,16 @@ import {
   Button,
   Alert,
   Link as MuiLink,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { signUp } from "../../store/authSlice";
 
 const SignUp: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [error, setError] = useState<string>("");
   const [formData, setFormData] = useState({
     name: "",
@@ -42,8 +46,16 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 400, mx: "auto", mt: 8 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+    <Box
+      sx={{
+        p: { xs: 2, sm: 3 },
+        maxWidth: { xs: "100%", sm: "400px" },
+        mx: "auto",
+        mt: { xs: 4, sm: 8 },
+        width: "100%",
+      }}
+    >
+      <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 } }}>
         <Typography variant="h5" gutterBottom align="center">
           Sign Up
         </Typography>
@@ -60,6 +72,8 @@ const SignUp: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
               required
+              fullWidth
+              size={isMobile ? "small" : "medium"}
             />
             <TextField
               name="email"
@@ -68,6 +82,8 @@ const SignUp: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               required
+              fullWidth
+              size={isMobile ? "small" : "medium"}
             />
             <TextField
               name="password"
@@ -76,11 +92,19 @@ const SignUp: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               required
+              fullWidth
+              size={isMobile ? "small" : "medium"}
             />
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size={isMobile ? "small" : "medium"}
+            >
               Sign Up
             </Button>
-            <Typography align="center">
+            <Typography align="center" variant={isMobile ? "body2" : "body1"}>
               Already have an account?{" "}
               <MuiLink component={Link} to="/signin">
                 Sign In

@@ -1,9 +1,17 @@
 import React, { useState, useCallback } from "react";
-import { Button, Typography, Box } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Box,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Plus, Minus, RotateCcw } from "lucide-react";
 
 const Counter: React.FC = () => {
   const [count, setCount] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const getBackgroundHeight = useCallback(() => {
     return `${Math.min(100, Math.max(0, count * 2))}%`;
@@ -13,7 +21,7 @@ const Counter: React.FC = () => {
     <Box
       sx={{
         position: "relative",
-        height: "100%",
+        height: { xs: "300px", sm: "400px", md: "500px" },
         width: "100%",
         overflow: "hidden",
         bgcolor: "background.paper",
@@ -39,17 +47,30 @@ const Counter: React.FC = () => {
           flexDirection: "column",
           alignItems: "center",
           gap: 2,
-          p: 4,
+          p: { xs: 2, sm: 3, md: 4 },
+          height: "100%",
+          justifyContent: "center",
         }}
       >
-        <Typography variant="h2" sx={{ color: "primary.main" }}>
+        <Typography
+          variant={isMobile ? "h3" : "h2"}
+          sx={{ color: "primary.main" }}
+        >
           {count}
         </Typography>
-        <Box sx={{ display: "flex", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            width: { xs: "100%", sm: "auto" },
+          }}
+        >
           <Button
             variant="contained"
             onClick={() => setCount((prev) => prev + 1)}
             startIcon={<Plus />}
+            fullWidth={isMobile}
           >
             Increment
           </Button>
@@ -57,6 +78,7 @@ const Counter: React.FC = () => {
             variant="outlined"
             onClick={() => setCount(0)}
             startIcon={<RotateCcw />}
+            fullWidth={isMobile}
           >
             Reset
           </Button>
@@ -64,6 +86,7 @@ const Counter: React.FC = () => {
             variant="contained"
             onClick={() => setCount((prev) => prev - 1)}
             startIcon={<Minus />}
+            fullWidth={isMobile}
           >
             Decrement
           </Button>

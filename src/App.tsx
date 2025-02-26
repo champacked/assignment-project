@@ -19,8 +19,22 @@ import {
   Typography,
   IconButton,
   Avatar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import MenuIcon from "@mui/icons-material/Menu";
+import HomeIcon from "@mui/icons-material/Home";
+import PersonIcon from "@mui/icons-material/Person";
+import EditIcon from "@mui/icons-material/Edit";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Counter from "./components/Counter";
 import UserForm from "./components/UserForm";
 import RichTextEditor from "./components/RichTextEditor";
@@ -73,11 +87,23 @@ const theme = createTheme({
       },
     },
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
 });
 
 const Navigation: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
@@ -86,58 +112,145 @@ const Navigation: React.FC = () => {
     // @ts-ignore
     dispatch(signOut());
     navigate("/signin");
+    if (isMobile) {
+      setDrawerOpen(false);
+    }
   };
 
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          {isAuthenticated ? `Welcome, ${user?.name}` : "Welcome"}
-        </Typography>
-        {isAuthenticated ? (
-          <>
-            <Button color="inherit" component={Link} to="/">
-              Counter
-            </Button>
-            <Button color="inherit" component={Link} to="/user-form">
-              User Form
-            </Button>
-            <Button color="inherit" component={Link} to="/editor">
-              Rich Text Editor
-            </Button>
-            <IconButton
-              color="inherit"
-              component={Link}
-              to="/profile"
-              sx={{ ml: 1 }}
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    if (isMobile) {
+      setDrawerOpen(false);
+    }
+  };
+
+  const menuItems = isAuthenticated
+    ? [
+        { text: "Counter", icon: <HomeIcon />, path: "/" },
+        { text: "User Form", icon: <PersonIcon />, path: "/user-form" },
+        { text: "Rich Text Editor", icon: <EditIcon />, path: "/editor" },
+        {
+          text: "Profile",
+          icon: (
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                fontSize: "0.75rem",
+                bgcolor: "secondary.main",
+              }}
             >
-              <Avatar
-                sx={{
-                  width: 32,
-                  height: 32,
-                  bgcolor: "secondary.main",
-                  fontSize: "1rem",
-                }}
+              {user?.name?.charAt(0)}
+            </Avatar>
+          ),
+          path: "/profile",
+        },
+        { text: "Sign Out", icon: <LogoutIcon />, action: handleSignOut },
+      ]
+    : [
+        { text: "Sign In", icon: <LoginIcon />, path: "/signin" },
+        { text: "Sign Up", icon: <PersonAddIcon />, path: "/signup" },
+      ];
+
+  const drawer = (
+    <Box sx={{ width: 250 }} role="presentation">
+      <List>
+        {menuItems.map((item) => (
+          <ListItem
+            button
+            key={item.text}
+            onClick={item.action || (() => handleNavigation(item.path))}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  return (
+    <>
+      <AppBar position="static">
+        <Toolbar>
+          {isMobile ? (
+            <>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={() => setDrawerOpen(true)}
+                sx={{ mr: 2 }}
               >
-                {user?.name?.charAt(0)}
-              </Avatar>
-            </IconButton>
-            <Button color="inherit" onClick={handleSignOut} sx={{ ml: 1 }}>
-              Sign Out
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button color="inherit" component={Link} to="/signin">
-              Sign In
-            </Button>
-            <Button color="inherit" component={Link} to="/signup">
-              Sign Up
-            </Button>
-          </>
-        )}
-      </Toolbar>
-    </AppBar>
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                {isAuthenticated ? `Welcome, ${user?.name}` : "Welcome"}
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                {isAuthenticated ? `Welcome, ${user?.name}` : "Welcome"}
+              </Typography>
+              {isAuthenticated ? (
+                <>
+                  <Button color="inherit" component={Link} to="/">
+                    Counter
+                  </Button>
+                  <Button color="inherit" component={Link} to="/user-form">
+                    User Form
+                  </Button>
+                  <Button color="inherit" component={Link} to="/editor">
+                    Rich Text Editor
+                  </Button>
+                  <IconButton
+                    color="inherit"
+                    component={Link}
+                    to="/profile"
+                    sx={{ ml: 1 }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        bgcolor: "secondary.main",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {user?.name?.charAt(0)}
+                    </Avatar>
+                  </IconButton>
+                  <Button
+                    color="inherit"
+                    onClick={handleSignOut}
+                    sx={{ ml: 1 }}
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button color="inherit" component={Link} to="/signin">
+                    Sign In
+                  </Button>
+                  <Button color="inherit" component={Link} to="/signup">
+                    Sign Up
+                  </Button>
+                </>
+              )}
+            </>
+          )}
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        {drawer}
+      </Drawer>
+    </>
   );
 };
 
@@ -150,14 +263,21 @@ function App() {
           <Box
             sx={{
               flexGrow: 1,
-              height: "100vh",
+              minHeight: "100vh",
               display: "flex",
               flexDirection: "column",
               bgcolor: "background.default",
             }}
           >
             <Navigation />
-            <Container sx={{ flexGrow: 1, py: 3 }}>
+            <Container
+              sx={{
+                flexGrow: 1,
+                py: 3,
+                px: { xs: 2, sm: 3, md: 4 },
+                maxWidth: { xs: "100%", sm: "100%", md: "lg" },
+              }}
+            >
               <Routes>
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
